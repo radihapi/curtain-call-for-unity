@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class ShootingPlayer : MonoBehaviour
 {
-    float speed = 4.0f;
+    const float FastSpeed = 4.0f;
+    const float SlowSpeed = 2.0f;
+    float speed;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        speed = FastSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(transform.position);
+
+        // 上下左右操作
         if (Input.GetKey (KeyCode.UpArrow)) {
           transform.position += transform.up * speed * Time.deltaTime;
         }
@@ -26,6 +31,14 @@ public class ShootingPlayer : MonoBehaviour
         }
         if (Input.GetKey (KeyCode.LeftArrow)) {
             transform.position -= transform.right * speed * Time.deltaTime;
+        }
+
+        // 低速移動切り替え
+        if(Input.GetKeyDown(KeyCode.LeftShift)){
+            speed = SlowSpeed;
+        }
+        if(Input.GetKeyUp(KeyCode.LeftShift)){
+            speed = FastSpeed;
         }
     }
 }
