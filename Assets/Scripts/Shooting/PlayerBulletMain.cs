@@ -8,19 +8,7 @@ public class PlayerBulletMain : MonoBehaviour
     float speed = 300f;
     private bool isRender = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // 大きな座標に到達したら削除
-        if(Mathf.Abs(transform.position.x) > 10f || Mathf.Abs(transform.position.y) > 10f){
-            isRender = false;
-        }
-    }
+    CharacterBase chara;
 
     public bool Run(int index, float time){
         Vector3 move = direct * 30f * WorldTime.fixedDeltaTime;
@@ -30,7 +18,25 @@ public class PlayerBulletMain : MonoBehaviour
         rdr.sortingOrder = index;
 
         bool ret = isRender;
-        // isRender = false; 理由不明、バグるので外している
+
+        // 攻撃判定
+        if(chara != null){
+            if(chara.transform.position.x <= transform.position.x + 1 &&
+                chara.transform.position.x >= transform.position.x - 1 &&
+                chara.transform.position.y <= transform.position.y + 1 &&
+                chara.transform.position.y >= transform.position.y - 1
+            ){
+                chara.lifePoint -= 1;
+                isRender = false;
+            }
+        }
+
+
+        // 大きな座標に到達したら削除
+        if(Mathf.Abs(transform.position.x) > 10f || Mathf.Abs(transform.position.y) > 10f){
+            isRender = false;
+        }
+
         return ret;
     }
 
@@ -38,6 +44,12 @@ public class PlayerBulletMain : MonoBehaviour
         direct = rot * Vector3.up;
         speed = spd;
         transform.SetPositionAndRotation(pos,rot);
+        
+        try{
+            chara = GameObject.FindGameObjectWithTag("Character").GetComponent<CharacterBase>();
+        }catch{
+            chara = null;
+        }
 
         isRender = true;
         gameObject.SetActive(true);

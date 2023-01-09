@@ -5,7 +5,7 @@ using UnityEngine;
 public class ShootingPlayer : MonoBehaviour
 {
     const float FastSpeed = 4.0f;
-    const float SlowSpeed = 2.0f;
+    const float SlowSpeed = 1.5f;
     float speed;
 
     int BulletMax = 100;
@@ -34,7 +34,6 @@ public class ShootingPlayer : MonoBehaviour
     void Update()
     {
         float elapsedTime = WorldTime.fixedDeltaTime;
-        Debug.Log(WorldTime.fixedDeltaTime);
 
         // 上下左右操作
         if (Input.GetKey (KeyCode.UpArrow)) {
@@ -53,11 +52,9 @@ public class ShootingPlayer : MonoBehaviour
         // 低速移動切り替え
         if(Input.GetKeyDown(KeyCode.LeftShift)){
             speed = SlowSpeed;
-            WorldTime.startDespairKaleidoScope();
         }
         if(Input.GetKeyUp(KeyCode.LeftShift)){
             speed = FastSpeed;
-            WorldTime.endDespairKaleidoScope();
         }
 
         // 弾丸
@@ -92,7 +89,7 @@ public class ShootingPlayer : MonoBehaviour
         int index = 0;
         while (node != null){
             PlayerBulletMain bl = node.Value;
-            bool act = bl.Run(index,elapsedTime);
+            bool act = bl.Run(index, elapsedTime);
             prevNode = node;
             node = node.Next;
             if(!act){
