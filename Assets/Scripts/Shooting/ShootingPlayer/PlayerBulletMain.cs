@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerBulletMain : MonoBehaviour
 {
-    Vector3 direct = Vector3.forward;
+    Vector3 direct;
     float speed = 300f;
     private bool isRender = false;
 
-    CharacterBase chara;
+    Character chara;
 
     public bool Run(int index, float time){
         Vector3 move = direct * 30f * WorldTime.fixedDeltaTime;
@@ -31,7 +31,6 @@ public class PlayerBulletMain : MonoBehaviour
             }
         }
 
-
         // 大きな座標に到達したら削除
         if(Mathf.Abs(transform.position.x) > 10f || Mathf.Abs(transform.position.y) > 10f){
             isRender = false;
@@ -46,7 +45,7 @@ public class PlayerBulletMain : MonoBehaviour
         transform.SetPositionAndRotation(pos,rot);
         
         try{
-            chara = GameObject.FindGameObjectWithTag("Character").GetComponent<CharacterBase>();
+            chara = GameObject.FindGameObjectWithTag("Character").GetComponent<Character>();
         }catch{
             chara = null;
         }

@@ -10,6 +10,7 @@
         // "**/*.user":true,
         // "**/*.userprefs":true,
         // "**/*.unityproj":true,
+        "**/*.csproj":true,
         // "**/*.dll":true,
         // "**/*.exe":true,
         // "**/*.pdf":true,

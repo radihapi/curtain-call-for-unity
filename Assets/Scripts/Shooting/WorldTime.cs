@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// 静的クラスとして呼ばれる時間クラス　時が遅くなったような処理落ちを狙う
 static public class WorldTime
 {
     static private float fixedDeltaTimeValue = 0.00166667f;
