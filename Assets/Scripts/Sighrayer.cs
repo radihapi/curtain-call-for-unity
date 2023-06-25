@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 
@@ -49,6 +50,13 @@ public class Sighrayer : MonoBehaviour
     private GameObject monogatariNameSubObject;
     private TextMeshPro monogatariNameSubText;
 
+    // LPとHP
+    private Sprite lifePointSprite;
+    private SpriteRenderer[] lifePointSpriteRenderers = new SpriteRenderer[6];
+    private GameObject[] lifePointObjects = new GameObject[6];
+    private Sprite heroPointSprite;
+    private SpriteRenderer[] heroPointSpriteRenderers = new SpriteRenderer[6];
+    private GameObject[] heroPointObjects = new GameObject[6];
 
     void Start()
     {
@@ -120,6 +128,26 @@ public class Sighrayer : MonoBehaviour
         monogatariNameBottomObject.SetActive(false);
         monogatariNameCenterObject.SetActive(false);
         monogatariNameSubObject.SetActive(false);
+
+        // LPとHP初期化
+        lifePointSprite = Resources.Load<Sprite>("Images/Shooting/CounterLifePoint");
+        for (int i = 0; i < 6; i++)
+        {
+            lifePointObjects[i] = new GameObject($"lifePointStar{i}");
+            lifePointSpriteRenderers[i] = lifePointObjects[i].AddComponent<SpriteRenderer>();
+            lifePointSpriteRenderers[i].sprite = lifePointSprite;
+            lifePointObjects[i].transform.position = Libra.PixelVectorToWorldVector(1000 + i * 80, 240, -9);
+            lifePointObjects[i].SetActive(false);
+        }
+        heroPointSprite = Resources.Load<Sprite>("Images/Shooting/CounterHeroPoint");
+        for (int i = 0; i < 6; i++)
+        {
+            heroPointObjects[i] = new GameObject($"heroPointSword{i}");
+            heroPointSpriteRenderers[i] = heroPointObjects[i].AddComponent<SpriteRenderer>();
+            heroPointSpriteRenderers[i].sprite = heroPointSprite;
+            heroPointObjects[i].transform.position = Libra.PixelVectorToWorldVector(1000 + i * 80, 360, -9);
+            heroPointObjects[i].SetActive(false);
+        }
     }
     void Update()
     {
@@ -133,6 +161,8 @@ public class Sighrayer : MonoBehaviour
         if(monogatariNameDisplayingPhase >= 1) UpdateMonogatariDisplay();
 
         if(t > 1500) UpdateMonogatariUI();
+
+        UpdateGameSystemUI();
 
         t++;
     }
@@ -224,5 +254,10 @@ public class Sighrayer : MonoBehaviour
             }
         }
 
+    }
+
+    void UpdateGameSystemUI(){
+        for (int i = 0; i < 6; i++) lifePointObjects[i].SetActive(playerLifePoint > i);
+        for (int i = 0; i < 6; i++) heroPointObjects[i].SetActive(playerHeroPoint > i);
     }
 }

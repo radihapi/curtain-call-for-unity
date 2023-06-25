@@ -50,7 +50,7 @@ public static class Libra
     private static float worldWidth = bottomRightX - topLeftX;
     private static float worldHeight = topLeftY - bottomRightY;
 
-    public static Vector3 PixelVectorToWorldVector(long x, long y)
+    public static Vector3 PixelVectorToWorldVector(long x, long y, float z = 0)
     {
         // ワールド座標系でのwidthとheightを計算
         float worldWidth = bottomRightX - topLeftX;
@@ -60,6 +60,6 @@ public static class Libra
         float worldX = topLeftX + (x / customWidth) * worldWidth;
         float worldY = topLeftY - (y / customHeight) * worldHeight;
 
-        return new Vector3(worldX, worldY, 0f);
+        return new Vector3(worldX, worldY, z);
     }
 }

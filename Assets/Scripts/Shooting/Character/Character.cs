@@ -27,6 +27,9 @@ public class Character : MonoBehaviour
         curtain = GameObject.Find("Curtain").GetComponent<Curtain>();
         sighrayer = GameObject.Find("Sighrayer").GetComponent<Sighrayer>();
         transform.position = Libra.PixelVectorToWorldVector(-100, -100);
+
+        sighrayer.playerLifePoint = 2;
+        sighrayer.playerHeroPoint = 3;
     }
 
     void Update()
