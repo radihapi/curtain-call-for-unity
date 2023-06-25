@@ -6,7 +6,9 @@ public class Character : MonoBehaviour
 {
     public long lifePoint = 1000L;
     Curtain curtain;
+    GameObject monogatariObject;
     Monogatari monogatari;
+    Sighrayer sighrayer;
     public long t = 1; // 時間管理、update最後で++
     public string mode = "monogatari"; // 物語モードなど
     public string phase = "ready"; // 状態遷移全般
@@ -23,6 +25,7 @@ public class Character : MonoBehaviour
     void Start()
     {
         curtain = GameObject.Find("Curtain").GetComponent<Curtain>();
+        sighrayer = GameObject.Find("Sighrayer").GetComponent<Sighrayer>();
         transform.position = Libra.PixelVectorToWorldVector(-100, -100);
     }
 
@@ -30,12 +33,16 @@ public class Character : MonoBehaviour
     {
         if(lifePoint < 0){
             gameObject.SetActive(false);
+        }else{
+            sighrayer.monogatariLifePoint = lifePoint;
         }
 
         if(phase == "ready"){
             transform.position = Libra.EasingInOut(Libra.PixelVectorToWorldVector(-100, -100), Libra.PixelVectorToWorldVector(385, 150), t, 1000);
 
             if(transform.position == Libra.PixelVectorToWorldVector(385, 150)){
+                monogatariObject = new GameObject("monogatari");
+                monogatari = monogatariObject.AddComponent<Monogatari>();
                 phase = "monogatari";
             }
         }

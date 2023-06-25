@@ -27,6 +27,13 @@ public static class Libra
         return goalVector / 2 * ( t * t * ((plusAlpha + 1) * t + plusAlpha) + 2) + startVector;
     }
 
+    // 震えるオブジェクト
+    public static Vector3 Quake(Vector3 vector, float d = 0.1f)
+    {
+        return new Vector3(vector.x + Random.Range(-d, d), vector.y + Random.Range(-d, d), 0);
+    }
+
+
     // シューティングモードの左上を0,0としたxy座標からVector3に変換する処理
     // タイトルモードで使っても良いが、基本UIで足りるはずなのでシューティングモード優先
     
