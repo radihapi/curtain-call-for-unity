@@ -16,10 +16,10 @@ public class Monogatari : MonoBehaviour
         curtain = GameObject.Find("Curtain").GetComponent<Curtain>();
         sighrayer = GameObject.Find("Sighrayer").GetComponent<Sighrayer>();
 
-        sighrayer.monogatariName = "一人ぼっちの大海原";
-        sighrayer.monogatariNameTop = "一人ぼっちの";
-        sighrayer.monogatariNameBottom = "大海原";
-        sighrayer.monogatariNameSub = "ジャンル：アーキタイプドライブ";
+        sighrayer.monogatariName = "じゃんけん";
+        sighrayer.monogatariNameTop = "じゃん";
+        sighrayer.monogatariNameBottom = "けん";
+        sighrayer.monogatariNameSub = "じゃんけん";
         sighrayer.monogatariNameCenter = ""; // 文字が入ると中央文字の演出になる
         sighrayer.monogatariNameDisplayingPhase = 1;
 
