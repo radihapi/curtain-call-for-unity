@@ -21,7 +21,8 @@ public class Monogatari : MonoBehaviour
         sighrayer.monogatariNameBottom = "けん";
         sighrayer.monogatariNameSub = "じゃんけん";
         sighrayer.monogatariNameCenter = ""; // 文字が入ると中央文字の演出になる
-        sighrayer.monogatariNameDisplayingPhase = 1;
+        sighrayer.monogatariNameDirectionPhase = 1;
+        sighrayer.monogatariUiIsActive = true;
 
         sighrayer.monogatariLifePoint = 1000;
         sighrayer.monogatariMaxLifePoint = 1000;

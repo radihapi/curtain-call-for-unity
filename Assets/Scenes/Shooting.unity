@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 152038199}
   - component: {fileID: 152038201}
   m_Layer: 0
-  m_Name: PlayerSizuka
+  m_Name: ShootingPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -701,21 +701,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  mode: monogatari
+  mode: execution
+  chapter: monogatari
   t: 0
   playerLifePoint: 0
   playerHeroPoint: 0
+  trueEndCount: 0
+  highScoreRecord: 0
+  overXPoint: 0
+  xPoint: 0
   monogatariName: 
   monogatariLifePoint: 0
   monogatariMaxLifePoint: 0
   monogatariTimeLimit: 0
   monogatariMaxTimeLimit: 0
-  monogatariNameDisplayingPhase: 0
+  monogatariNameDirectionPhase: 0
   monogatariNameDisplayngStartT: 0
   monogatariNameTop: 
   monogatariNameBottom: 
   monogatariNameCenter: 
   monogatariNameSub: 
+  monogatariUiIsActive: 0
 --- !u!4 &1677469008
 Transform:
   m_ObjectHideFlags: 0

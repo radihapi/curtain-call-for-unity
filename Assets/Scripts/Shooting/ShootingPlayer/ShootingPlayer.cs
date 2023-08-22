@@ -30,9 +30,11 @@ public class ShootingPlayer : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    // void Update()
+    // {
+    // }
+
+    public void Pray(){
         float elapsedTime = WorldTime.fixedDeltaTime;
 
         // 上下左右操作

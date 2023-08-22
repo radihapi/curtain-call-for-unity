@@ -12,12 +12,16 @@ public class Sighrayer : MonoBehaviour
     // デバッグ起動オプション
     public bool debug = false; 
 
-    // 状態 [game // 通常ゲーム, monogatari // 物語単体のプレイ , null]
-    public string mode = "monogatari"; 
+    // 状態 [execution, logue, pause] 
+    public string mode = "execution";
+    // [1-6,Afterword // 通常ゲーム, monogatari // 物語単体のプレイ , null]
+    public string chapter = "monogatari"; 
 
     public long t = 0;
 
-    // プレイヤー体力等はプレイヤーのクラスから与えられる
+    // プレイヤー
+    ShootingPlayer shootingPlayer;
+    // プレイヤー体力等はプレイヤーのクラスから与えられる予定
     public long playerLifePoint;
     public long playerHeroPoint;
 
@@ -60,7 +64,7 @@ public class Sighrayer : MonoBehaviour
     private LineRenderer monogatariTimeLimitSecondLine;
 
     // 物語宣言演出用
-    public long monogatariNameDisplayingPhase = 0;
+    public long monogatariNameDirectionPhase = 0;
     public long monogatariNameDisplayngStartT = 0L;
     public string monogatariNameTop = "";
     public string monogatariNameBottom = "";
@@ -75,8 +79,13 @@ public class Sighrayer : MonoBehaviour
     private GameObject monogatariNameSubObject;
     private TextMeshPro monogatariNameSubText;
 
+    public bool monogatariUiIsActive = false;
+
     void Start()
     {
+        // shootingPlayerはここでメモリを確保するようにした方が良いかも
+        shootingPlayer = GameObject.Find("ShootingPlayer").GetComponent<ShootingPlayer>();
+
         // ステータスUI
         trueEndCountObject = new GameObject("trueEndCount");
         trueEndCountText = trueEndCountObject.AddComponent<TextMeshPro>();
@@ -113,8 +122,6 @@ public class Sighrayer : MonoBehaviour
         xPointText.rectTransform.sizeDelta = new Vector2(xPointText.preferredWidth,xPointText.preferredHeight);
         xPointObject.transform.position = Libra.PixelVectorToWorldVector(1000, 470, -9);
         xPointText.enableWordWrapping = false;
-
-
 
         // LPとHP初期化
         lifePointSprite = Resources.Load<Sprite>("Images/Shooting/CounterLifePoint");
@@ -205,20 +212,24 @@ public class Sighrayer : MonoBehaviour
         monogatariNameCenterObject.SetActive(false);
         monogatariNameSubObject.SetActive(false);
     }
+
     void Update()
     {
         switch(mode)
         {
-            case "monogatari":
+            case "execution":
+                if(monogatariNameDirectionPhase >= 1) UpdateMonogatariNameDirection();
+                if(monogatariUiIsActive) UpdateMonogatariUi();
                 UpdateMonogatari();
+                shootingPlayer.Pray();
+                break;
+            case "dialog":
+                break;
+            case "pause":
                 break;
         }
 
-        if(monogatariNameDisplayingPhase >= 1) UpdateMonogatariDisplay();
-
-        if(t > 1500) UpdateMonogatariUI();
-
-        UpdateGameSystemUI();
+        UpdateGameSystemUi();
 
         t++;
     }
@@ -228,7 +239,7 @@ public class Sighrayer : MonoBehaviour
 
     }
 
-    void UpdateMonogatariUI()
+    void UpdateMonogatariUi()
     {
         // 物語の名前
         monogatariNameText.text = monogatariName;
@@ -257,62 +268,65 @@ public class Sighrayer : MonoBehaviour
         monogatariTimeLimitSecondLine.SetPosition(3, Libra.PixelVectorToWorldVector(10, 38));
     }
 
-    void UpdateMonogatariDisplay()
+    void UpdateMonogatariNameDirection()
     {
-        if(monogatariNameCenter == ""){
-            if(monogatariNameDisplayingPhase == 1) {
-                monogatariNameDisplayngStartT = t;
-    
+        if(monogatariNameDirectionPhase == 1) {
+            monogatariNameDisplayngStartT = t;
+
+            if(monogatariNameTop != "" && monogatariNameTop != ""){
                 monogatariNameTopObject.SetActive(true);
                 monogatariNameBottomObject.SetActive(true);
-                monogatariNameSubObject.SetActive(true);
-    
+
                 monogatariNameTopText.text = monogatariNameTop;
                 monogatariNameBottomText.text = monogatariNameBottom;
-                monogatariNameSubText.text = monogatariNameSub;
-    
+
                 monogatariNameTopText.rectTransform.sizeDelta = new Vector2(monogatariNameTopText.preferredWidth,monogatariNameTopText.preferredHeight);
                 monogatariNameBottomText.rectTransform.sizeDelta = new Vector2(monogatariNameBottomText.preferredWidth,monogatariNameBottomText.preferredHeight);
-                monogatariNameSubText.rectTransform.sizeDelta = new Vector2(monogatariNameSubText.preferredWidth,monogatariNameSubText.preferredHeight);
-    
-                monogatariNameDisplayingPhase = 2;
-            }
-    
-            if(monogatariNameDisplayingPhase == 2){
+
+                monogatariNameDirectionPhase = 2;
+
                 monogatariNameTopObject.transform.position =  Libra.EasingInOut(Libra.PixelVectorToWorldVector(- (long)monogatariNameTopText.preferredWidth * 100 / 2, 200), Libra.PixelVectorToWorldVector((long)monogatariNameTopText.preferredWidth * 100 / 2, 200), t, monogatariNameDisplayngStartT + 1500);
                 monogatariNameBottomObject.transform.position =  Libra.EasingInOut(Libra.PixelVectorToWorldVector((long)monogatariNameBottomText.preferredWidth * 100 + 700, 620), Libra.PixelVectorToWorldVector(700 - (long)monogatariNameBottomText.preferredWidth * 100 / 2, 620), t, monogatariNameDisplayngStartT + 1500);
-                monogatariNameSubObject.transform.position =  Libra.EasingInOut(Libra.PixelVectorToWorldVector(300, 610), Libra.PixelVectorToWorldVector(400, 610), t, monogatariNameDisplayngStartT + 1500);
             }
-    
             
-            if(t - monogatariNameDisplayngStartT > 1500) {
-                monogatariNameDisplayingPhase = 0;
-                monogatariNameTopObject.SetActive(false);
-                monogatariNameBottomObject.SetActive(false);
-                monogatariNameSubObject.SetActive(false);
-            }
-        }else{
-            if(monogatariNameDisplayingPhase == 1) {
+            if(monogatariNameCenter == ""){
+                monogatariNameSubObject.SetActive(true);
+                monogatariNameSubText.text = monogatariNameSub;
+                monogatariNameSubText.rectTransform.sizeDelta = new Vector2(monogatariNameSubText.preferredWidth,monogatariNameSubText.preferredHeight);
+            }else{
                 monogatariNameCenterText.text = monogatariNameCenter;
                 monogatariNameCenterText.rectTransform.sizeDelta = new Vector2(monogatariNameCenterText.preferredWidth,monogatariNameCenterText.preferredHeight);
                 monogatariNameCenterObject.transform.position = Libra.PixelVectorToWorldVector(385, 400);
                 monogatariNameCenterObject.SetActive(true);
-                monogatariNameDisplayingPhase = 2;
             }
-    
-            if(monogatariNameDisplayingPhase == 2){
-                if(t % 30 == 0) monogatariNameCenterObject.transform.position = Libra.Quake(Libra.PixelVectorToWorldVector(385, 400));
+
+            monogatariNameDirectionPhase = 2;
+        }
+        if(monogatariNameDirectionPhase == 2){
+            
+            if(monogatariNameTop != "" && monogatariNameTop != ""){
+                monogatariNameTopObject.transform.position =  Libra.EasingInOut(Libra.PixelVectorToWorldVector(- (long)monogatariNameTopText.preferredWidth * 100 / 2, 200), Libra.PixelVectorToWorldVector((long)monogatariNameTopText.preferredWidth * 100 / 2, 200), t, monogatariNameDisplayngStartT + 1500);
+                monogatariNameBottomObject.transform.position =  Libra.EasingInOut(Libra.PixelVectorToWorldVector((long)monogatariNameBottomText.preferredWidth * 100 + 700, 620), Libra.PixelVectorToWorldVector(700 - (long)monogatariNameBottomText.preferredWidth * 100 / 2, 620), t, monogatariNameDisplayngStartT + 1500);
+            
             }
             
-            if(t - monogatariNameDisplayngStartT > 2000) {
-                monogatariNameDisplayingPhase = 0;
-                monogatariNameCenterObject.SetActive(false);
+            if(monogatariNameCenter == ""){
+                monogatariNameSubObject.transform.position =  Libra.EasingInOut(Libra.PixelVectorToWorldVector(300, 610), Libra.PixelVectorToWorldVector(400, 610), t, monogatariNameDisplayngStartT + 1500);
+            }else{
+                if(t % 30 == 0) monogatariNameCenterObject.transform.position = Libra.Quake(Libra.PixelVectorToWorldVector(385, 400));
             }
         }
-
+    
+        if(t - monogatariNameDisplayngStartT > 1500) {
+            monogatariNameDirectionPhase = 0;
+            monogatariNameTopObject.SetActive(false);
+            monogatariNameBottomObject.SetActive(false);
+            monogatariNameSubObject.SetActive(false);
+            monogatariNameCenterObject.SetActive(false);
+        }
     }
 
-    void UpdateGameSystemUI(){
+    void UpdateGameSystemUi(){
         for (int i = 0; i < 6; i++) lifePointObjects[i].SetActive(playerLifePoint > i);
         for (int i = 0; i < 6; i++) heroPointObjects[i].SetActive(playerHeroPoint > i);
     }

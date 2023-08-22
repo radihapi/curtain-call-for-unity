@@ -7,13 +7,20 @@ public partial class Bullet : MonoBehaviour
     Vector3 direct;
     float speed;
     private bool isRender = false;
-    private string bulletType;
-    private string mode;
+    private string category; // どういった攻撃か。主に見た目に反映
+    private string color; // 色がある一部の弾丸でのみ指定する色
+    private string motionType; // どういった攻撃か。主に動き方に反映
+    private string mode; // 弾によっては使われる、動きを制御する為の変数
 
-    public void Shoot(Vector3 pos, Quaternion rot, string bulletMode, float speed = 300f){
-        mode = bulletMode;
+    public void Shoot(
+            string category, string color,
+            string motionType,
+            Vector3 pos, Quaternion rot,
+            float speed = 300f
+        ){
+        this.motionType = motionType;
 
-        switch(mode){
+        switch(motionType){
             case "straight":
                 direct = rot * Vector3.down;
                 transform.SetPositionAndRotation(pos,rot);
@@ -25,7 +32,7 @@ public partial class Bullet : MonoBehaviour
     }
 
     public void Observe(int index){
-        switch(mode){
+        switch(motionType){
             case "straight":
                 Vector3 move = direct * 30f * WorldTime.fixedDeltaTime;
                 transform.Translate(move, Space.World);

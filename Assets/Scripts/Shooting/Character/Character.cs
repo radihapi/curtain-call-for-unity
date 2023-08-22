@@ -12,7 +12,6 @@ public class Character : MonoBehaviour
     public long t = 1; // 時間管理、update最後で++
     public string mode = "monogatari"; // 物語モードなど
     public string phase = "ready"; // 状態遷移全般
-
     
     float shotWaitTime = 1f;
 
@@ -74,7 +73,7 @@ public class Character : MonoBehaviour
                     pos.x += 0.4f * i;
                     pos.y += 0.4f;
                     Quaternion rot = Quaternion.identity;
-                    bl.Shoot(pos,Quaternion.identity,"straight",2);
+                    bl.Shoot("big","blue","straight",pos,Quaternion.identity,2);
                 }
 
                 shotWaitTime += 1000f;
